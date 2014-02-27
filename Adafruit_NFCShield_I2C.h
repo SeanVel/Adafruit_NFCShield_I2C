@@ -97,7 +97,6 @@
 #define PN532_I2C_READYTIMEOUT              (20)
 
 #define PN532_MIFARE_ISO14443A              (0x00)
-#define PN532_FELICA                        (0x01)
 
 // Mifare Commands
 #define MIFARE_CMD_AUTH_A                   (0x60)
@@ -172,9 +171,6 @@ class Adafruit_NFCShield_I2C{
   boolean inListPassiveTarget();
   boolean readPassiveTargetID(uint8_t cardbaudrate, uint8_t * uid, uint8_t * uidLength);
   boolean inDataExchange(uint8_t * send, uint8_t sendLength, uint8_t * response, uint8_t * responseLength);
-  
-  // Felica functions
-  boolean readPassiveTargetIDFelica(uint8_t * uid, uint8_t * uidLength);
   
   // Mifare Classic functions
   bool mifareclassic_IsFirstBlock (uint32_t uiBlock);

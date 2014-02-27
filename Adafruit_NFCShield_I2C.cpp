@@ -17,11 +17,7 @@
 	please support Adafruit and open-source hardware by purchasing 
 	products from Adafruit!
 
-	Updated by Sean and Jeff
-
 	@section  HISTORY
-
-	v1.5 - Added set
 
     v1.4 - Added setPassiveActivationRetries()
 	
@@ -63,8 +59,8 @@ byte pn532ack[] = {0x00, 0x00, 0xFF, 0x00, 0xFF, 0x00};
 byte pn532response_firmwarevers[] = {0x00, 0xFF, 0x06, 0xFA, 0xD5, 0x03};
 
 // Uncomment these lines to enable debug output for PN532(I2C) and/or MIFARE related code
-//#define MIFAREDEBUG
-//#define PN532DEBUG
+// #define PN532DEBUG
+// #define MIFAREDEBUG
 
 #define PN532_PACKBUFFSIZ 64
 byte pn532_packetbuffer[PN532_PACKBUFFSIZ];
@@ -523,77 +519,6 @@ boolean Adafruit_NFCShield_I2C::readPassiveTargetID(uint8_t cardbaudrate, uint8_
   return 1;
 }
 
-/***** FeliCa Functions ******/
-
-/**************************************************************************/
-/*! 
-    Waits for an FeliCa target to enter the field
-    
-
-    @param  uid           Pointer to the array that will be populated
-                          with the card's UID (up to 7 bytes)
-    @param  uidLength     Pointer to the variable that will hold the
-                          length of the card's UID.
-    
-    @returns 1 if everything executed properly, 0 for an error
-*/
-/**************************************************************************/
-boolean Adafruit_NFCShield_I2C::readPassiveTargetIDFelica(uint8_t * uid, uint8_t * uidLength) {
-  pn532_packetbuffer[0] = PN532_COMMAND_INLISTPASSIVETARGET;
-  pn532_packetbuffer[1] = 1;  // max 1 cards at once (we can set this to 2 later)
-  pn532_packetbuffer[2] = PN532_FELICA;
-  pn532_packetbuffer[3] = 0x00;
-  pn532_packetbuffer[4] = 0xFF;
-  pn532_packetbuffer[5] = 0xFF;
-  pn532_packetbuffer[6] = 0x01;
-  pn532_packetbuffer[7] = 0x00;
-  
-  
-  if (! sendCommandCheckAck(pn532_packetbuffer, 8))
-  {
-    #ifdef PN532DEBUG
-	Serial.println("No card(s) read");
-	#endif
-    return 0x0;  // no cards read
-  }
-  
-  // Wait for a card to enter the field
-  uint8_t status = PN532_I2C_BUSY;
-  #ifdef PN532DEBUG
-  Serial.println("Waiting for IRQ (indicates card presence)");
-  #endif
-  while (wirereadstatus() != PN532_I2C_READY)
-  {
-	delay(10);
-  }
-
-  #ifdef PN532DEBUG
-  Serial.println("Found a card"); 
-  #endif
- 
-  // read data packet
-  wirereaddata(pn532_packetbuffer, 24);
-  
-
-  #ifdef PN532DEBUG
-  Serial.println("Buffer Results: ");
-  for(uint8_t i = 0; i < 24; ++i)
-  {
-	Serial.print("Byte #");
-	Serial.print(i,DEC);
-	Serial.print(": 0x");
-    Serial.println(pn532_packetbuffer[i],HEX);
-  }
-  #endif
-  if(pn532_packetbuffer[7]!=1)
-	return 0;
-  *uidLength = 16;
-  for (uint8_t i = 0; i < 16; ++i)
-  {
-	uid[i]=pn532_packetbuffer[i+11];
-  }
-  return 1;
-}
 
 /***** Mifare Classic Functions ******/
 
