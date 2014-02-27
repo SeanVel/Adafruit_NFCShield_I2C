@@ -22,7 +22,7 @@
 	@section  HISTORY
 
 	v1.5 - Added Felica function
-
+	
     v1.4 - Added setPassiveActivationRetries()
 	
     v1.3 - Modified to work with I2C
@@ -63,8 +63,8 @@ byte pn532ack[] = {0x00, 0x00, 0xFF, 0x00, 0xFF, 0x00};
 byte pn532response_firmwarevers[] = {0x00, 0xFF, 0x06, 0xFA, 0xD5, 0x03};
 
 // Uncomment these lines to enable debug output for PN532(I2C) and/or MIFARE related code
-// #define PN532DEBUG
-// #define MIFAREDEBUG
+//#define MIFAREDEBUG
+//#define PN532DEBUG
 
 #define PN532_PACKBUFFSIZ 64
 byte pn532_packetbuffer[PN532_PACKBUFFSIZ];
